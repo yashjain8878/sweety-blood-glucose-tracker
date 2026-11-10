@@ -1,16 +1,21 @@
 
 const express = require('express');
 const pool = require('./config/db');
+const cors = require('cors');
+
 const authRoutes = require('./routes/authRoutes');
+const readingRoutes = require('./routes/readingRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
-const PORT = 5000;
-
-// Read JSON data from requests
+const PORT = process.env.PORT || 5000;
+    
 app.use(express.json());
+app.use(cors());
 
-// Authentication routes
 app.use('/api/auth', authRoutes);
+app.use('/api/readings', readingRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.get('/', (req, res) => {
     res.send('Sweety Backend is running!');
