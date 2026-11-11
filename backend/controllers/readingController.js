@@ -82,10 +82,17 @@ return res.status(201).json({
 const getReadings = async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT *
-             FROM readings
-             WHERE user_id = $1
-             ORDER BY reading_date DESC, created_at DESC`,
+            `SELECT
+    id,
+    user_id,
+    TO_CHAR(reading_date, 'YYYY-MM-DD') AS reading_date,
+    slot,
+    value,
+    created_at,
+    updated_at
+ FROM readings
+ WHERE user_id = $1
+ ORDER BY reading_date DESC, created_at DESC`,
             [req.user.id]
         );
 
@@ -233,5 +240,3 @@ module.exports = {
 
 
 
-
-module.exports = { addReading,getReadings, updateReading , deleteReading };

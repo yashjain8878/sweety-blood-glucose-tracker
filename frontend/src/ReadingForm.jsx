@@ -29,10 +29,14 @@ function ReadingForm({ selectedDate, onReadingAdded }) {
 
     const glucoseValue = Number(value);
 
-    if (!Number.isInteger(glucoseValue) ||
-        glucoseValue < 40 ||
-        glucoseValue > 600) {
-      setError('Glucose value must be an integer between 40 and 600 mg/dL.');
+    if (
+      !Number.isInteger(glucoseValue) ||
+      glucoseValue < 40 ||
+      glucoseValue > 600
+    ) {
+      setError(
+        'Glucose value must be an integer between 40 and 600 mg/dL.'
+      );
       return;
     }
 
@@ -67,95 +71,138 @@ function ReadingForm({ selectedDate, onReadingAdded }) {
   };
 
   return (
-    <section className="bg-white border border-[#d8e0e8] rounded-lg p-5">
+    <section className="bg-white border border-[#e0e9eb] rounded-2xl p-5 sm:p-7 shadow-sm">
 
-      <h3 className="text-lg font-semibold text-[#202b36] mb-1">
-        Add glucose reading
-      </h3>
+      {/* Heading */}
+      <div className="flex items-start gap-3 mb-7">
+        <div className="w-12 h-12 shrink-0 bg-[#e7f5f3] rounded-xl flex items-center justify-center text-2xl">
+          🩺
+        </div>
 
-      <p className="text-sm text-[#5c6b7c] mb-5">
-        Record your blood glucose level for the selected date.
-      </p>
+        <div>
+          <h3 className="text-xl font-bold text-[#203438]">
+            Add glucose reading
+          </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+          <p className="text-sm text-[#829397] mt-1">
+            Record your blood glucose level for the selected date.
+          </p>
+        </div>
+      </div>
 
+      <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* Error message */}
         {error && (
-          <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
-            {error}
-          </p>
-        )}
-
-        {success && (
-          <p role="status" className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md p-3">
-            {success}
-          </p>
-        )}
-
-        <div>
-          <label className="block text-sm font-medium mb-1.5">
-            Reading date
-          </label>
-
-          <input
-            type="date"
-            value={selectedDate}
-            readOnly
-            className="w-full h-11 px-3 border border-[#d8e0e8] rounded-md bg-gray-50 text-sm"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="slot" className="block text-sm font-medium mb-1.5">
-            Time slot
-          </label>
-
-          <select
-            id="slot"
-            value={slot}
-            onChange={(e) => setSlot(e.target.value)}
-            required
-            className="w-full h-11 px-3 border border-[#d8e0e8] rounded-md bg-white outline-none focus:border-[#087f83]"
+          <div
+            role="alert"
+            className="flex items-start gap-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-4"
           >
-            <option value="">Select a time slot</option>
+            <span className="font-bold">!</span>
+            <span>{error}</span>
+          </div>
+        )}
 
-            {slots.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+        {/* Success message */}
+        {success && (
+          <div
+            role="status"
+            className="flex items-start gap-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl p-4"
+          >
+            <span className="font-bold">✓</span>
+            <span>{success}</span>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          {/* Reading date */}
+          <div>
+            <label
+              htmlFor="readingFormDate"
+              className="block text-sm font-semibold text-[#344b50] mb-2"
+            >
+              Reading date
+            </label>
+
+            <input
+              id="readingFormDate"
+              type="date"
+              value={selectedDate}
+              readOnly
+              className="w-full h-12 px-4 border border-[#dce7e8] rounded-xl bg-[#f5f8f8] text-[#62777c] text-sm cursor-not-allowed"
+            />
+
+            <p className="text-xs text-[#91a1a4] mt-2">
+              Selected from the dashboard.
+            </p>
+          </div>
+
+          {/* Time slot */}
+          <div>
+            <label
+              htmlFor="slot"
+              className="block text-sm font-semibold text-[#344b50] mb-2"
+            >
+              Time slot
+            </label>
+
+            <select
+              id="slot"
+              value={slot}
+              onChange={(e) => setSlot(e.target.value)}
+              required
+              className="w-full h-12 px-4 border border-[#dce7e8] rounded-xl bg-white text-[#344b50] outline-none focus:border-[#087f83] focus:ring-4 focus:ring-[#087f83]/10 transition-all"
+            >
+              <option value="">Select a time slot</option>
+
+              {slots.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Glucose value */}
+          <div className="md:col-span-2">
+            <label
+              htmlFor="value"
+              className="block text-sm font-semibold text-[#344b50] mb-2"
+            >
+              Glucose value (mg/dL)
+            </label>
+
+            <input
+              id="value"
+              type="number"
+              min="40"
+              max="600"
+              step="1"
+              placeholder="Enter your glucose value"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              required
+              className="w-full h-12 px-4 border border-[#dce7e8] rounded-xl bg-white text-[#263c40] placeholder:text-[#a2b1b4] outline-none focus:border-[#087f83] focus:ring-4 focus:ring-[#087f83]/10 transition-all"
+            />
+
+            <p className="text-xs text-[#829397] mt-2">
+              Enter a whole number between 40 and 600 mg/dL.
+            </p>
+          </div>
+
         </div>
 
-        <div>
-          <label htmlFor="value" className="block text-sm font-medium mb-1.5">
-            Glucose value (mg/dL)
-          </label>
-
-          <input
-            id="value"
-            type="number"
-            min="40"
-            max="600"
-            step="1"
-            placeholder="Enter value (40–600)"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            required
-            className="w-full h-11 px-3 border border-[#d8e0e8] rounded-md outline-none focus:border-[#087f83]"
-          />
-
-          <p className="text-xs text-[#5c6b7c] mt-1">
-            Allowed range: 40–600 mg/dL
-          </p>
+        {/* Submit button */}
+        <div className="pt-2 border-t border-[#edf1f2]">
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full sm:w-auto min-w-48 h-12 px-7 bg-[#087f83] hover:bg-[#076e72] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl shadow-md shadow-[#087f83]/15 transition-all"
+          >
+            {busy ? 'Saving reading...' : '＋ Save glucose reading'}
+          </button>
         </div>
-
-        <button
-          type="submit"
-          disabled={busy}
-          className="w-full sm:w-auto px-6 h-11 bg-[#087f83] hover:bg-[#076e72] disabled:opacity-60 text-white font-semibold rounded-md"
-        >
-          {busy ? 'Saving...' : 'Save reading'}
-        </button>
 
       </form>
     </section>
